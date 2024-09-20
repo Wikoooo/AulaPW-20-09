@@ -1,0 +1,47 @@
+ao clicar no botao login, temos q pensar em dois procedimentos
+
+1- o usiario nao esta cadastrado($email)
+2-checar se o usuario e a senha existem no bd ($email, $senha)
+(contato.class)
+
+
+_____________Dentro do Contato.class.php_________________
+
+ function checkUser($email){
+        $check= "SELECT email, id FROM usuarios WHERE email = :em";
+        $check = $this->pdo->prepare($check);
+        $check->bindValue(":em", $email);
+        $check->execute();
+        
+        if($check->rowCount() > 0){
+            return $check->fetch();  
+        }else{
+            return array();
+        }
+      }
+}
+
+
+
+_______________________Dentro do Index.php________________
+
+require"Contato.class.php";
+
+$contato = new Contato();
+
+if(isset($_POST['btnCadastrar'])){
+    $email = $_POST["email"];
+    $dados = $contato->checkUser($email);
+    if(!empty($dados)){
+        echo "<script>
+        alert(`Usuário já cadastrado!`)
+     </script>";
+    }else{
+        echo "<script>
+        alert(`Usuário logado com sucesso!`)
+     </script>";
+    }
+}
+
+
+
